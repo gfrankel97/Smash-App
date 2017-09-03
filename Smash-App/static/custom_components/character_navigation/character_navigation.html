@@ -1,0 +1,38 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../character_select/character_select.html">
+
+<dom-module id="character-navigation">
+    <template>
+        <style>
+        </style>
+        <app-header id="menu_toolbar">
+            <paper-icon-button></paper-icon-button>
+        </app-header>
+        <iron-media-query query="(max-width: 450px)" query-matches="{{ is_mobile }}"></iron-media-query>
+        <character-select is_mobile="{{ is_mobile }}"></character-select>
+    </template>
+    <script>
+        Polymer({
+            is: 'character-navigation',
+            
+            properties: {
+                is_mobile: {
+                	type: Boolean,
+                	value: false
+                }
+            },
+    
+            ready: function() {
+            	
+            },
+        });
+    </script>
+</dom-module>

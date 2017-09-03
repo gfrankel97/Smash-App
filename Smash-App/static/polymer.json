@@ -1,0 +1,32 @@
+{
+  "entrypoint": "index.html",
+  "shell": "custom_components/character_navigation/character_navigation.html",
+  "fragments": [
+       "custom_components/character_navigation/character_navigation.html",
+       "custom_components/character_select/character_select.html",
+       "images/**/*"
+  ],
+  "sources": [
+  	"custom_components/character_navigation/character_navigation.html",
+    "images/**/*",
+    "bower.json"
+  ],
+  "extraDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/*.js"
+  ],
+  "lint": {
+    "rules": ["polymer-2"]
+  },
+  "builds": [
+    {
+      "preset": "es5-bundled"
+    },
+    {
+      "preset": "es6-bundled"
+    },
+    {
+      "preset": "es6-unbundled"
+    }
+  ]
+}
