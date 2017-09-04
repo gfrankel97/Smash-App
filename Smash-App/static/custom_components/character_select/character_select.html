@@ -22,15 +22,27 @@
 		    .character_text {
 		        color: var(--paper-grey-800);
 		    }
+		    .inline_block_centerer {
+			  text-align: center;
+			}
+			#centerer {
+			  display: inline-block;
+			  text-align: left;
+			}
+			#centerer {
+			   display: flex;
+                justify-content: center;
+			}
 	    </style>
-
-        <template is="dom-repeat" items="{{ characters }}" as="character">
-            <paper-card image="{{ character.character_select_image }}" class="character_card" elevation="4" on-tap="character_tapped">
-                <div class="card-content character_text">
-                    {{ character.name }}
-                </div>
-            </paper-card>
-        </template>
+	    <div id="centerer" class="layout horizontal wrap">
+            <template is="dom-repeat" items="{{ characters }}" as="character">
+	            <paper-card image="{{ character.character_select_image }}" class="character_card" elevation="4" on-tap="character_tapped">
+	                <div class="card-content character_text">
+	                    {{ character.name }}
+	                </div>
+	            </paper-card>
+	        </template>
+	    </div>
     </template>
     <script>
 	    Polymer({
@@ -47,6 +59,7 @@
 	        	}
 	        },
 	
+	        
 	        ready: function() {
 	            this.load();
 	        },
@@ -61,7 +74,7 @@
 	        },
 
 	        character_tapped: function(event) {
-	        	console.log(event.model.character)
+	        	this.fire('character_selected', event.model.character);
 	        }
 	    });
     </script>

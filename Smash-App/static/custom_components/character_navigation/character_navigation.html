@@ -4,20 +4,72 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../bower_components/paper-styles/color.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-layout.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 
 <link rel="import" href="../character_select/character_select.html">
+<link rel="import" href="../character_sheet/character_sheet.html">
+<link rel="import" href="../styles/icons.html">
 
 <dom-module id="character-navigation">
     <template>
-        <style>
+        <style is="custom-style" include="iron-flex iron-flex-alignment">
+            app-header {
+                height: 64px;
+                background-color: var(--paper-grey-600);
+                color: white;
+            }
+            app-drawer {
+                z-index: 10;
+            }
+            #search_button {
+               right: 8px;
+               position: absolute;
+               height: 40px;
+
+            }
+            #toolbar_text {
+               font-size: 32px;
+               margin-top: 8px;
+               margin-left: 8px;
+	        }
+
+	        #drawer_div {
+	            height: 100%;
+	            overflow: auto;
+	            background-color: var(--paper-grey-600);
+	            color: white;
+	        }
+	        .toolbar_button {
+               margin-top: 12px;
+               margin-bottom: 12px;
+	        }
         </style>
-        <app-header id="menu_toolbar">
-            <paper-icon-button></paper-icon-button>
+
+        <app-header id="menu_toolbar" reveals>
+            <app-toolbar>
+                <div class="layout horizontal wrap">
+                    <paper-icon-button id="menu_button" icon="smash:menu" class="toolbar_button" on-tap="drawer_toggled"></paper-icon-button>
+                    <div main-title id="toolbar_text">SSBM VAULT</div>
+                    <paper-icon-button id="search_button" icon="smash:search"class="toolbar_button"></paper-icon-button>
+                </div>
+            </app-toolbar>
         </app-header>
+        <app-drawer id="navigation_drawer">
+             <div id="drawer_div">
+                <div role="listbox">
+				    <paper-item id="drawer_item" on-tap="character_select_view">Character Select</paper-item>
+				</div>
+             </div>    
+        </app-drawer>
         <iron-media-query query="(max-width: 450px)" query-matches="{{ is_mobile }}"></iron-media-query>
-        <character-select is_mobile="{{ is_mobile }}"></character-select>
+        <template is="dom-if" if="{{ !character }}">
+            <character-select is_mobile="{{ is_mobile }}"></character-select>
+        </template>
+        <template is="dom-if" if="{{ character }}">
+            <character-sheet character="{{ character }}"></character-sheet>
+        </template>
     </template>
     <script>
         Polymer({
@@ -25,14 +77,34 @@
             
             properties: {
                 is_mobile: {
-                	type: Boolean,
-                	value: false
+                    type: Boolean,
+                    value: false
+                },
+                character: {
+                    type: String,
+                    value: null
                 }
             },
-    
-            ready: function() {
-            	
+
+            listeners: {
+                'character_selected': 'character_selected',
             },
+
+            ready: function() {
+            },
+
+            drawer_toggled: function() {
+                this.$.navigation_drawer.toggle();
+            },
+
+            character_select_view: function() {
+            	this.character = null;
+            	this.$.navigation_drawer.toggle();
+            },
+
+            character_selected: function(event) {
+                this.character = event.detail;
+            }
         });
     </script>
 </dom-module>
