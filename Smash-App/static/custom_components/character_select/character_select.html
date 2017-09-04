@@ -19,8 +19,13 @@
 		          --iron-image-height: 100px;
 		        }
 		    }
+		    .character_card:hover {
+		      cursor: pointer;
+		    }
 		    .character_text {
-		        color: var(--paper-grey-800);
+		        @apply --paper-font-headline;
+		        padding: 0px;
+		        margin: 8px;
 		    }
 		    .inline_block_centerer {
 			  text-align: center;
@@ -69,8 +74,10 @@
 	        },
 	
 	        get_character_data: function() {
-	        	this.push('characters', {name: 'Fox', character_select_image: '../../images/character_select_images/fox.jpg'});
-	        	this.push('characters', {name: 'Falco', character_select_image: '../../images/character_select_images/falco.jpg'});
+	        	this.push('characters', {name: 'Fox',
+	        		                     character_select_image: '../../images/character_select_images/fox.jpg'});
+	        	this.push('characters', {name: 'Falco',
+	        		                     character_select_image: '../../images/character_select_images/falco.jpg'});
 	        },
 
 	        character_tapped: function(event) {

@@ -34,7 +34,14 @@
                margin-top: 8px;
                margin-left: 8px;
 	        }
-
+	        #toolbar_text:hover {
+	           cursor:default;
+	        }
+            #secondary_toolbar_text {
+                font-size: 16px;
+                margin: auto;
+                padding-left: 16px;
+            }
 	        #drawer_div {
 	            height: 100%;
 	            overflow: auto;
@@ -52,6 +59,7 @@
                 <div class="layout horizontal wrap">
                     <paper-icon-button id="menu_button" icon="smash:menu" class="toolbar_button" on-tap="drawer_toggled"></paper-icon-button>
                     <div main-title id="toolbar_text">{{ toolbar_text }}</div>
+                    <div id="secondary_toolbar_text">{{ secondary_toolbar_text }}</div>
                     <paper-icon-button id="search_button" icon="smash:search"class="toolbar_button"></paper-icon-button>
                 </div>
             </app-toolbar>
@@ -87,11 +95,16 @@
                 toolbar_text: {
                 	type: String,
                 	value: 'SSBM Vault'
+                },
+                secondary_toolbar_text: {
+                	type: String,
+                	value: ''
                 }
             },
 
             listeners: {
                 'character_selected': 'character_selected',
+                'change_toolbar_text': 'change_toolbar_text'
             },
 
             ready: function() {
@@ -101,19 +114,20 @@
                 this.$.navigation_drawer.toggle();
             },
 
-            change_toolbar_text: function(text) {
-            	this.toolbar_text = text;
+            change_toolbar_text: function(event) {
+            	this.toolbar_text = event.detail.primary;
+            	this.secondary_toolbar_text = ((event.detail.secondary !== undefined) || (event.detail.secondary !== '')) ? event.detail.secondary : '';
             },
 
             character_select_view: function() {
             	this.character = null;
             	this.$.navigation_drawer.toggle();
-            	this.change_toolbar_text('SSBM Vault');
+            	this.change_toolbar_text({detail:{primary: 'SSBM Vault', secondary: ''}});
             },
 
             character_selected: function(event) {
                 this.character = event.detail;
-                this.change_toolbar_text(this.character.name);
+                this.change_toolbar_text({detail:{primary: this.character.name, secondary: ''}});
             }
         });
     </script>

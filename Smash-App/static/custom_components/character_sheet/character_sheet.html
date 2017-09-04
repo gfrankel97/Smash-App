@@ -2,10 +2,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 
 <link rel="import" href="../character_select/character_select.html">
-<link rel="import" href="../character_sheet/character_sheet.html">
 
 <dom-module id="character-sheet">
     <template>
@@ -14,8 +14,45 @@
                 margin: 4px;
                 width: 100%;
             }
+            .move_card:hover, .card_header:hover {
+                cursor: pointer;
+            }
+            .move_card {
+                width: 125px;
+            }
+            .move_header {
+                @apply --paper-font-headline;
+                font-size: 16px;
+                margin: 8px;
+            }
+            .card_header {
+                @apply --paper-font-headline;
+            }
         </style>
          <paper-card image="{{ character.character_select_image }}">
+            <div class="card-content">
+                <div class="card_header" id="character_moves" on-tap="moves_collapse_tapped">Moves</div>
+                <iron-collapse id="moves">
+                    <div class="collapse-content">
+                        <div class="category_header">Active</div>
+                        <template is="dom-repeat" items="{{ character.moves }}" as="active_move">
+                            <template is="dom-if" if="{{ active_move.active }}">
+	                            <paper-card class="move_card" image="{{ active_move.animation }}" elevation="2" on-tap="move_tapped">
+	                                <div class="move_header">{{ active_move.name }}</div>
+	                            </paper-card>
+                            </template>
+                        </template>
+                        <div class="category_header">Passive</div>
+                        <template is="dom-repeat" items="{{ character.moves }}" as="passive_move">
+                            <template is="dom-if" if="{{ !passive_move.active }}">
+	                            <paper-card class="move_card" image="{{ passive_move.animation }}" elevation="2" on-tap="move_tapped">
+	                                <div class="move_header">{{ passive_move.name }}</div>
+	                            </paper-card>
+	                        </template>
+                        </template>
+                    </div>
+                </iron-collapse>
+            </div>
         </paper-card>
     </template>
     <script>
@@ -23,7 +60,7 @@
             is: 'character-sheet',
             
             properties: {
-            	characer: {
+            	character: {
             		type: Object,
             		value: {}
             	}
@@ -31,6 +68,48 @@
     
             ready: function() {
             },
+
+            moves_collapse_tapped: function(event) {
+            	this.get_character_moves_data();
+            	this.$.moves.toggle();
+            },
+
+            get_character_moves_data: function() {
+            	//send request to load moves here
+            	var loaded_moves = [{name: 'Up Smash',
+            		                 animation: '../../images/moves/fox/up_smash.gif',
+            		                 active: true},
+            		                 {name: 'Roll',
+            		                 animation: '../../images/moves/fox/roll.gif',
+            		                 active: false}];
+            	this.set('character.moves', loaded_moves)
+            },
+
+            get_active_moves: function() {
+            	var active_moves = [];
+            	for(var i=0; i < this.character.moves.length; i++) {
+            		if(this.character.moves[i].active) {
+            			active_moves.push(this.character.moves[i]);
+            		}
+            	}
+            	console.log(active_moves)
+            	return active_moves;
+            },
+
+            get_passive_moves: function() {
+                var passive_moves = [];
+                for(var i=0; i < this.character.moves.length; i++) {
+                    if(!this.character.moves[i].active) {
+                        passive_moves.push(this.character.moves[i]);
+                    }
+                }
+                console.log(passive_moves)
+                return passive_moves;
+            },
+
+            move_tapped: function(event) {
+            	//console.log(event.model.moves)
+            }
         });
     </script>
 </dom-module>
