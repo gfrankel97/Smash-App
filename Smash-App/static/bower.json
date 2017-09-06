@@ -18,7 +18,8 @@
     "paper-toolbar": "PolymerElements/paper-toolbar#^2.0.0",
     "paper-item": "PolymerElements/paper-item#^2.0.0",
     "iron-collapse": "PolymerElements/iron-collapse#^2.0.0",
-    "paper-slider": "PolymerElements/paper-slider#^2.0.2"
+    "paper-slider": "PolymerElements/paper-slider#^2.0.2",
+    "paper-card": "PolymerElements/paper-card#^2.0.0"
   },
   "resolutions": {
     "polymer": "^2.0.0"
