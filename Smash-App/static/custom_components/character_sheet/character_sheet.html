@@ -7,6 +7,7 @@
 
 <link rel="import" href="../character_select/character_select.html">
 <link rel="import" href="../input_builder/input_builder.html">
+<link rel="import" href="../frame_scrubber/frame_scrubber.html">
 
 <dom-module id="character-sheet">
     <template>
@@ -72,6 +73,10 @@
                         <input-builder inputs="{{ tech }}"></input-builder>
                     </template>
                 </iron-collapse>
+            </div>
+           <div class="card-content">
+                <div class="card_header">Scrubber</div>
+                <frame-scrubber></frame-scrubber>
             </div>
         </paper-card>
     </template>

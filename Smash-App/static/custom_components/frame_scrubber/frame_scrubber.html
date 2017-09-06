@@ -1,12 +1,18 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/paper-silder/paper-slider.html">
+
 
 <dom-module id="frame-scrubber">
     <template>
         <style is="custom-style" include="iron-flex iron-flex-alignment">
+            paper-slider {
+                width: 100%;
+                height: 70px;
+            }
         </style>
 
 	    <div class="layout horizontal">
-	       
+	        <paper-slider></paper-slider>
 	    </div>
     <script>
         Polymer({
@@ -15,6 +21,10 @@
             properties: {
             	
             },
+            
+            ready: function() {
+            	console.log('frame scrubber')
+            }
         });
     </script>
 </dom-module>
