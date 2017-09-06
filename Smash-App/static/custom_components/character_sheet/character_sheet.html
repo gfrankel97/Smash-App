@@ -6,6 +6,7 @@
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 
 <link rel="import" href="../character_select/character_select.html">
+<link rel="import" href="../input_builder/input_builder.html">
 
 <dom-module id="character-sheet">
     <template>
@@ -28,10 +29,17 @@
             .card_header {
                 @apply --paper-font-headline;
             }
+            .collapse_icon {
+                float: right;
+                padding-top: 0px;
+            }
         </style>
          <paper-card image="{{ character.character_select_image }}">
             <div class="card-content">
-                <div class="card_header" id="character_moves" on-tap="moves_collapse_tapped">Moves</div>
+                <div class="card_header" id="character_moves" on-tap="moves_collapse_tapped">Moves
+                    <template is="dom-if" if="{{ moves_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_up" hidden="{{ opened }}"></paper-icon-button></template>
+                    <template is="dom-if" if="{{ !moves_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_down" hidden="{{ !opened }}"></paper-icon-button></template>
+                </div>
                 <iron-collapse id="moves">
                     <div class="collapse-content">
                         <div class="category_header">Active</div>
@@ -53,6 +61,18 @@
                     </div>
                 </iron-collapse>
             </div>
+            <div class="card-content">
+                <div class="card_header" id="specific_tech" on-tap="tech_collapse_tapped">Specific Tech
+                    <template is="dom-if" if="{{ tech_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_up" hidden="{{ opened }}"></paper-icon-button></template>
+                    <template is="dom-if" if="{{ !tech_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_down" hidden="{{ !opened }}"></paper-icon-button></template>
+                </div>
+                <iron-collapse id="tech">
+                    <template is="dom-repeat" items="{{ character.tech }}" as="tech">
+                        <div class="category_header">Waveshine</div>
+                        <input-builder inputs="{{ tech }}"></input-builder>
+                    </template>
+                </iron-collapse>
+            </div>
         </paper-card>
     </template>
     <script>
@@ -63,6 +83,14 @@
             	character: {
             		type: Object,
             		value: {}
+            	},
+            	moves_opened: {
+            		type: Boolean,
+            		value: false,
+            	},
+            	tech_opened: {
+            		type: Boolean,
+            		value: false
             	}
             },
     
@@ -72,6 +100,13 @@
             moves_collapse_tapped: function(event) {
             	this.get_character_moves_data();
             	this.$.moves.toggle();
+            	this.moves_opened = this.$.moves.opened;
+            },
+
+            tech_collapse_tapped: function() {
+                this.get_character_tech_data();
+                this.$.tech.toggle();
+                this.tech_opened = this.$.tech.opened;
             },
 
             get_character_moves_data: function() {
@@ -85,6 +120,11 @@
             	this.set('character.moves', loaded_moves)
             },
 
+            get_character_tech_data: function() {
+            	//send request to load tech here
+            	console.log('get char tech data')
+            },
+
             get_active_moves: function() {
             	var active_moves = [];
             	for(var i=0; i < this.character.moves.length; i++) {
@@ -92,7 +132,6 @@
             			active_moves.push(this.character.moves[i]);
             		}
             	}
-            	console.log(active_moves)
             	return active_moves;
             },
 
@@ -103,12 +142,11 @@
                         passive_moves.push(this.character.moves[i]);
                     }
                 }
-                console.log(passive_moves)
                 return passive_moves;
             },
 
             move_tapped: function(event) {
-            	//console.log(event.model.moves)
+            	var move = event.model.active_move || event.model.passive_move;
             }
         });
     </script>
