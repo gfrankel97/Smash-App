@@ -10,6 +10,7 @@
 
 <link rel="import" href="../character_select/character_select.html">
 <link rel="import" href="../character_sheet/character_sheet.html">
+<link rel="import" href="../character_matchup/character_matchup.html">
 <link rel="import" href="../styles/icons.html">
 
 <dom-module id="character-navigation">
@@ -54,10 +55,11 @@
 	        }
         </style>
 
+        <iron-media-query query="(max-width: 450px)" query-matches="{{ is_mobile }}"></iron-media-query>
         <app-header id="menu_toolbar" reveals>
             <app-toolbar>
                 <div class="layout horizontal wrap">
-                    <paper-icon-button id="menu_button" icon="smash:menu" class="toolbar_button" on-tap="drawer_toggled"></paper-icon-button>
+                    <paper-icon-button id="menu_button" icon="smash:menu" class="toolbar_button" on-tap="toggle_drawer"></paper-icon-button>
                     <div main-title id="toolbar_text">{{ toolbar_text }}</div>
                     <div id="secondary_toolbar_text">{{ secondary_toolbar_text }}</div>
                     <paper-icon-button id="search_button" icon="smash:search"class="toolbar_button"></paper-icon-button>
@@ -67,17 +69,20 @@
         <app-drawer id="navigation_drawer">
              <div id="drawer_div">
                 <div role="listbox">
-				    <paper-item id="drawer_item" on-tap="character_select_view">Character Select</paper-item>
+				    <paper-item on-tap="set_character_select_view">Character Select</paper-item>
+				    <paper-item on-tap="set_character_matchup_view">Character Matchup</paper-item>
 				</div>
              </div>    
         </app-drawer>
-        <iron-media-query query="(max-width: 450px)" query-matches="{{ is_mobile }}"></iron-media-query>
-        <template is="dom-if" if="{{ !character }}">
-            <character-select is_mobile="{{ is_mobile }}"></character-select>
-        </template>
-        <template is="dom-if" if="{{ character }}">
-            <character-sheet character="{{ character }}"></character-sheet>
-        </template>
+<!--         <template is="dom-if" if="{{ character_select_bool }}"> -->
+            <character-select id="character_select" is_mobile="{{ is_mobile }}" hidden="{{ !character_select_bool }}"></character-select>
+<!--         </template> -->
+<!--         <template is="dom-if" if="{{ character_sheet_bool }}"> -->
+            <character-sheet tech_counter="{{ tech_counter }}" class="character_sheet" character="{{ character }}" hidden="{{ !character_sheet_bool }}"></character-sheet>
+<!--         </template> -->
+<!--         <template is="dom-if" if="{{ character_matchup_bool }}"> -->
+            <character-matchup character_one="{{ character_one }}" character_two="{{ character_two }}" hidden="{{ !character_matchup_bool }}"></character-matchup>
+<!--        </template> -->
     </template>
     <script>
         Polymer({
@@ -99,18 +104,48 @@
                 secondary_toolbar_text: {
                 	type: String,
                 	value: ''
+                },
+                character_select_bool: {
+                	type: Boolean,
+                	value: false,
+                },
+                character_sheet_bool: {
+                    type: Boolean,
+                    value: false,
+                },
+                character_matchup_bool: {
+                    type: Boolean,
+                    value: false,
                 }
             },
 
             listeners: {
                 'character_selected': 'character_selected',
-                'change_toolbar_text': 'change_toolbar_text'
+                'change_toolbar_text': 'change_toolbar_text',
+                'set_character_matchup_view': 'set_character_matchup_view'
             },
 
             ready: function() {
+            	this.character_select_bool = true;
+            },
+            
+            set_character_matchup_view: function(event) {
+            	this.toggle_drawer();
+            	this.character = undefined;
+            	this.change_toolbar_text({detail:{primary: 'SSBM Vault', secondary: ''}});
+            	this.character_select_bool = false;
+            	this.character_sheet_bool = false;
+            	if(event.detail.character_one && event.detail.character_two) {
+            		this.character_one = event.detail.character_one;
+            		this.character_two = event.detail.character_two;
+            	}
+            	else {
+            		this.character_one = 'dummy';
+            		this.character_two = 'dummy';
+            	}
             },
 
-            drawer_toggled: function() {
+            toggle_drawer: function() {
                 this.$.navigation_drawer.toggle();
             },
 
@@ -119,13 +154,20 @@
             	this.secondary_toolbar_text = ((event.detail.secondary !== undefined) || (event.detail.secondary !== '')) ? event.detail.secondary : '';
             },
 
-            character_select_view: function() {
+            set_character_select_view: function() {
+            	this.tech_counter = -1;
             	this.character = null;
-            	this.$.navigation_drawer.toggle();
+                this.character_sheet_bool = false;
+                this.character_matchup_bool = false;
+                this.character_select_bool = true;
+            	this.toggle_drawer();
             	this.change_toolbar_text({detail:{primary: 'SSBM Vault', secondary: ''}});
             },
 
             character_selected: function(event) {
+            	this.character_sheet_bool = true;
+            	this.character_matchup_bool = false;
+            	this.character_select_bool = false;
                 this.character = event.detail;
                 this.change_toolbar_text({detail:{primary: this.character.name, secondary: ''}});
             }

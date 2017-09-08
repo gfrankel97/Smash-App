@@ -68,10 +68,12 @@
                     <template is="dom-if" if="{{ !tech_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_down" hidden="{{ !opened }}"></paper-icon-button></template>
                 </div>
                 <iron-collapse id="tech">
-                    <template is="dom-repeat" items="{{ character.tech }}" as="tech">
-                        <div class="category_header">Waveshine</div>
-                        <input-builder inputs="{{ tech }}"></input-builder>
-                    </template>
+                    <template is="dom-if" if="{{ character }}">
+	                    <template is="dom-repeat" items="{{ character.tech }}" as="tech">
+	                        <div class="category_header">{{ get_tech_name() }}</div>
+	                        <input-builder inputs="{{ tech }}"></input-builder>
+	                    </template>
+	                </template>
                 </iron-collapse>
             </div>
            <div class="card-content">
@@ -87,7 +89,8 @@
             properties: {
             	character: {
             		type: Object,
-            		value: {}
+            		value: {},
+            		observer: 'character_changed'
             	},
             	moves_opened: {
             		type: Boolean,
@@ -96,10 +99,20 @@
             	tech_opened: {
             		type: Boolean,
             		value: false
+            	},
+            	tech_counter: {
+            		type: Number,
+            		value: -1
             	}
             },
-    
-            ready: function() {
+
+            character_changed: function() {
+            	 console.log('character changed', this.character)
+            	 if(this.character == null) {
+                     this.tech_counter = -1;
+           		     this.move_opened = false;
+           		     this.tech_opened = false;
+            	 }
             },
 
             moves_collapse_tapped: function(event) {
@@ -112,6 +125,12 @@
                 this.get_character_tech_data();
                 this.$.tech.toggle();
                 this.tech_opened = this.$.tech.opened;
+            },
+
+            get_tech_name: function() {
+            	this.tech_counter++;
+            	console.log('tech counter: ', this.tech_counter)
+           		return Object.keys(this.character.tech[this.tech_counter])[0];
             },
 
             get_character_moves_data: function() {
@@ -127,7 +146,6 @@
 
             get_character_tech_data: function() {
             	//send request to load tech here
-            	console.log('get char tech data')
             },
 
             get_active_moves: function() {

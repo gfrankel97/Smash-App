@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="character-matchup">
+    <template>
+        <style is="custom-style" include="iron-flex iron-flex-alignment">
+            .character_one_image {
+                position: absolute;
+			    top: 0;
+			    left: 0;
+			    bottom: 0;
+			    width: 20%;
+			    background-size: cover;
+            }
+            .character_two_image {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 100px;
+                background-size: cover;
+            }
+        </style>
+
+        <div class="layout horizontal wrap">
+            <paper-card>
+                <div class="card-content">
+                    <img class="character_one_image" src="{{ character_one.character_sheet_image }}">
+                    <img class="character_two_image" src="{{ character_two.character_sheet_image }}">
+                </div>
+            </paper-card>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'character-matchup',
+            
+            properties: {
+            	character_one: {
+            		type: Object,
+            		value: {}
+            	},
+                character_two: {
+                    type: Object,
+                    value: {}
+                },
+                
+            },
+
+            ready: function() {
+            	console.log('char matchu pready')
+            },
+            
+            
+        });
+    </script>
+</dom-module>
