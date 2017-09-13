@@ -74,15 +74,15 @@
 				</div>
              </div>    
         </app-drawer>
-<!--         <template is="dom-if" if="{{ character_select_bool }}"> -->
-            <character-select id="character_select" is_mobile="{{ is_mobile }}" hidden="{{ !character_select_bool }}"></character-select>
-<!--         </template> -->
-<!--         <template is="dom-if" if="{{ character_sheet_bool }}"> -->
-            <character-sheet tech_counter="{{ tech_counter }}" class="character_sheet" character="{{ character }}" hidden="{{ !character_sheet_bool }}"></character-sheet>
-<!--         </template> -->
-<!--         <template is="dom-if" if="{{ character_matchup_bool }}"> -->
-            <character-matchup character_one="{{ character_one }}" character_two="{{ character_two }}" hidden="{{ !character_matchup_bool }}"></character-matchup>
-<!--        </template> -->
+        <template is="dom-if" if="{{ character_select_bool }}">
+            <character-select id="character_select" is_mobile="{{ is_mobile }}"></character-select>
+        </template>
+        <template is="dom-if" if="{{ character_sheet_bool }}">
+            <character-sheet tech_counter="{{ tech_counter }}" class="character_sheet" character="{{ character }}"></character-sheet>
+        </template>
+        <template is="dom-if" if="{{ character_matchup_bool }}">
+            <character-matchup character_one="{{ character_one }}" character_two="{{ character_two }}"></character-matchup>
+       </template>
     </template>
     <script>
         Polymer({
@@ -135,10 +135,19 @@
             	this.change_toolbar_text({detail:{primary: 'SSBM Vault', secondary: ''}});
             	this.character_select_bool = false;
             	this.character_sheet_bool = false;
-            	if(event.detail.character_one && event.detail.character_two) {
-            		this.character_one = event.detail.character_one;
-            		this.character_two = event.detail.character_two;
-            	}
+            	this.character_matchup_bool = true;
+            	//if(event.detail.character_one && event.detail.character_two) {
+                if(true) {
+            		//this.character_one = event.detail.character_one;
+            		//this.character_two = event.detail.character_two;
+        		    this.character_one = {};
+                    this.character_two = {};
+                    this.character_one.name = 'Fox';
+                    this.character_two.name = 'Falco';
+            		this.character_one.character_sheet_image = '../../images/character_select_images/fox.jpg';
+            		this.character_two.character_sheet_image = '../../images/character_select_images/falco.jpg';
+            		console.log('set characters to: ', this.character_one, this.character_two)
+                }
             	else {
             		this.character_one = 'dummy';
             		this.character_two = 'dummy';

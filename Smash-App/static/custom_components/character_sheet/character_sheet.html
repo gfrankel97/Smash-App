@@ -13,7 +13,6 @@
     <template>
         <style>
             paper-card {
-                margin: 4px;
                 width: 100%;
             }
             .move_card:hover, .card_header:hover {
@@ -33,6 +32,9 @@
             .collapse_icon {
                 float: right;
                 padding-top: 0px;
+            }
+            .card-content {
+                border-bottom: 1px solid #E5E5E5;
             }
         </style>
         <paper-card image="{{ character.character_select_image }}">
@@ -107,7 +109,6 @@
             },
 
             character_changed: function() {
-            	 console.log('character changed', this.character)
             	 if(this.character == null) {
                      this.tech_counter = -1;
            		     this.move_opened = false;
@@ -129,7 +130,6 @@
 
             get_tech_name: function() {
             	this.tech_counter++;
-            	console.log('tech counter: ', this.tech_counter)
            		return Object.keys(this.character.tech[this.tech_counter])[0];
             },
 

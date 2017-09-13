@@ -21,8 +21,12 @@
             .plus {
                 width: 20px;
                 height: 20px;
-                margin: auto 0px;;
+                margin: auto 0px;
                 padding: 0px;
+            }
+            .comma {
+                margin: auto 0px;
+                font-size: 200%;
             }
         </style>
 
@@ -39,6 +43,7 @@
                <template is="dom-if" if="{{ !is_array(input.input) }}">
                     <img src=" {{ input.source }}">
                 </template>
+                <div class="comma" hidden="{{ is_last_comma_item(formatted_inputs, input.input) }}">,</div>
             </template>
             
         </div>
@@ -73,6 +78,15 @@
             	else {
             		return false;
             	}
+            },
+
+            is_last_comma_item: function(arr, element) {
+                if(arr[arr.length - 1].input == element) {
+                	return true;
+                }
+                else {
+                	return false;
+                }
             },
 
             format_inputs: function() {

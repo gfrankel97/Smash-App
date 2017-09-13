@@ -1,34 +1,85 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+
+<link rel="import" href="../tiered_chip/tiered_chip.html">
 
 <dom-module id="character-matchup">
     <template>
         <style is="custom-style" include="iron-flex iron-flex-alignment">
+            paper-card {
+                width: 100%;
+            }
             .character_one_image {
-                position: absolute;
-			    top: 0;
-			    left: 0;
-			    bottom: 0;
-			    width: 20%;
-			    background-size: cover;
+                float: left;
             }
             .character_two_image {
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                width: 100px;
-                background-size: cover;
+                float: right;
+            }
+            .shared_header_styles {
+                width: 50px;
+                margin-top: 15px;
+                display: inline-block;
+                font-size: 20px;
+            }
+            #character_one_header {
+                padding-left: 8px;
+                float: left;
+            }
+            #character_two_header {
+                float: right;
+                padding-right: 8px;
+            }
+            #right_chip {
+                float: right;
+            }
+            .shared_image_styles {
+                width: 25%;
+                height: 64px;
+            }
+            .header {
+                padding: 0px;
+                height: 64px;
+            }
+            .card_header {
+                @apply --paper-font-headline;
+            }
+            .collapse_icon {
+                float: right;
+                padding-top: 0px;
+            }
+            .card-content {
+                border-bottom: 1px solid #E5E5E5;
             }
         </style>
 
-        <div class="layout horizontal wrap">
-            <paper-card>
-                <div class="card-content">
-                    <img class="character_one_image" src="{{ character_one.character_sheet_image }}">
-                    <img class="character_two_image" src="{{ character_two.character_sheet_image }}">
+        <paper-card>
+            <div class="card-content header">
+                <iron-image sizing="cover" class="shared_image_styles character_one_image" src="{{ character_one.character_sheet_image }}"></iron-image>
+                <div id="character_one_header" class="shared_header_styles">
+                    {{ character_one.name }}
                 </div>
-            </paper-card>
-        </div>
+                
+                <iron-image sizing="cover" class="shared_image_styles character_two_image" src="{{ character_two.character_sheet_image }}"></iron-image>
+                <div id="character_two_header" class="shared_header_styles">
+                    {{ character_two.name }}
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="card_header" id="speed_header" on-tap="speed_collapse_tapped">Speed
+                    <tiered-chip height="30" width="50" letter="S"></tiered-chip>
+                    <template is="dom-if" if="{{ speed_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_up"></paper-icon-button></template>
+                    <template is="dom-if" if="{{ !speed_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_down"></paper-icon-button></template>
+                    <tiered-chip id="right_chip" height="30" width="50" letter="S"></tiered-chip>
+                </div>
+                <iron-collapse id="speed">
+                    <div class="collapse-content">
+                        <div>Fall Speed</div>
+                        <div>Jump Squat</div>
+                        <div>Aerial Drift</div>
+                    </div>
+                </iron-collapse>
+            </div>
+        </paper-card>
     </template>
     <script>
         Polymer({
@@ -37,20 +88,35 @@
             properties: {
             	character_one: {
             		type: Object,
-            		value: {}
+            		value: {},
+            		observer: 'character_one_changed'
             	},
                 character_two: {
                     type: Object,
-                    value: {}
+                    value: {},
+                    observer: 'character_two_changed'
                 },
-                
+                speed_opened: {
+                	type: Boolean,
+                	value: false
+                }
             },
 
             ready: function() {
-            	console.log('char matchu pready')
+            },
+
+            character_one_changed: function() {
+            	console.log('char one changed: ', this.character_one);
+            },
+
+            character_two_changed: function() {
+            	console.log('char two changed: ', this.character_two);
             },
             
-            
+            speed_collapse_tapped: function() {
+                this.$.speed.toggle();
+                this.speed_opened = this.$.speed.opened;
+            },
         });
     </script>
 </dom-module>
