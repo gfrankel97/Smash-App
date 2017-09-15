@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 
 <link rel="import" href="../tiered_chip/tiered_chip.html">
+<link rel="import" href="../smash_card_content/smash_card_content.html">
 
 <dom-module id="character-matchup">
     <template>
@@ -29,9 +30,6 @@
                 float: right;
                 padding-right: 8px;
             }
-            #right_chip {
-                float: right;
-            }
             .shared_image_styles {
                 width: 25%;
                 height: 64px;
@@ -39,9 +37,6 @@
             .header {
                 padding: 0px;
                 height: 64px;
-            }
-            .card_header {
-                @apply --paper-font-headline;
             }
             .collapse_icon {
                 float: right;
@@ -65,19 +60,10 @@
                 </div>
             </div>
             <div class="card-content">
-                <div class="card_header" id="speed_header" on-tap="speed_collapse_tapped">Speed
-                    <tiered-chip height="30" width="50" letter="S"></tiered-chip>
-                    <template is="dom-if" if="{{ speed_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_up"></paper-icon-button></template>
-                    <template is="dom-if" if="{{ !speed_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_down"></paper-icon-button></template>
-                    <tiered-chip id="right_chip" height="30" width="50" letter="S"></tiered-chip>
-                </div>
-                <iron-collapse id="speed">
-                    <div class="collapse-content">
-                        <div>Fall Speed</div>
-                        <div>Jump Squat</div>
-                        <div>Aerial Drift</div>
-                    </div>
-                </iron-collapse>
+                <smash-card-content name="Speed" collapse_categories="[[ get_speed_categories() ]]"></smash-card-content>
+            </div>
+            <div class="card-content">
+                <smash-card-content class="card-content" name="Punish" collapse_categories="[[ get_punish_categories() ]]"></smash-card-content>
             </div>
         </paper-card>
     </template>
@@ -95,10 +81,6 @@
                     type: Object,
                     value: {},
                     observer: 'character_two_changed'
-                },
-                speed_opened: {
-                	type: Boolean,
-                	value: false
                 }
             },
 
@@ -106,16 +88,17 @@
             },
 
             character_one_changed: function() {
-            	console.log('char one changed: ', this.character_one);
             },
 
             character_two_changed: function() {
-            	console.log('char two changed: ', this.character_two);
             },
             
-            speed_collapse_tapped: function() {
-                this.$.speed.toggle();
-                this.speed_opened = this.$.speed.opened;
+            get_speed_categories: function() {
+                return ['Dash Speed','Fall Speed', 'Jump Squat', 'Aerial Drift'];
+            },
+
+            get_punish_categories: function() {
+            	return ['Launchers', 'Edgeguards'];
             },
         });
     </script>

@@ -12,13 +12,7 @@
                 text-align: center;
             }
         </style>
-        
-<!--         <div class="wrapper"> -->
-<!--             <paper-item id="tiered_chip" noink on-tap="clicked"> -->
-                <div id="letter">{{ letter }}</div>
-<!--                 <span>Tier</span> -->
-<!--             </paper-item> -->
-<!--         </div> -->
+        <div id="letter">{{ letter }}</div>
 
     </template>
     <script>
@@ -51,10 +45,6 @@
             ready: function() {
                 this.$.letter.style.width = this.width + 'px';
                 this.$.letter.style.height = this.height + 'px';
-            },
-            
-            clicked: function() {
-            	this.$.tiered_chip.style.backgroundColor = this.red_color;
             }
         });
     </script>
