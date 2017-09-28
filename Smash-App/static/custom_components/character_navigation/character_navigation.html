@@ -11,6 +11,8 @@
 <link rel="import" href="../character_select/character_select.html">
 <link rel="import" href="../character_sheet/character_sheet.html">
 <link rel="import" href="../character_matchup/character_matchup.html">
+<link rel="import" href="../move_comparison/move_comparison.html">
+<link rel="import" href="../move_sheet/move_sheet.html">
 <link rel="import" href="../styles/icons.html">
 
 <dom-module id="character-navigation">
@@ -69,8 +71,10 @@
         <app-drawer id="navigation_drawer">
              <div id="drawer_div">
                 <div role="listbox">
-				    <paper-item on-tap="set_character_select_view">Character Select</paper-item>
-				    <paper-item on-tap="set_character_matchup_view">Character Matchup</paper-item>
+				    <paper-item id='character_select' on-tap="set_view">Character Select</paper-item>
+				    <paper-item id='character_matchup' on-tap="set_view">Character Matchup</paper-item>
+                    <paper-item id='move_sheet' on-tap="set_view">Move Data</paper-item>
+                    <paper-item id='move_comparison' on-tap="set_view">Move Comparison</paper-item>
 				</div>
              </div>    
         </app-drawer>
@@ -82,6 +86,12 @@
         </template>
         <template is="dom-if" if="{{ character_matchup_bool }}">
             <character-matchup character_one="{{ character_one }}" character_two="{{ character_two }}"></character-matchup>
+       </template>
+       <template is="dom-if" if="{{ move_comparison_bool }}">
+            <move-comparison></move-comparison>
+       </template>
+       <template is="dom-if" if="{{ move_sheet_bool }}">
+            <move-sheet></move-sheet>
        </template>
     </template>
     <script>
@@ -116,10 +126,19 @@
                 character_matchup_bool: {
                     type: Boolean,
                     value: false,
+                },
+                move_comparison_bool: {
+                	type: Boolean,
+                	value: false
+                },
+                move_sheet_bool: {
+                	type: Boolean,
+                    value: false
                 }
             },
 
             listeners: {
+            	'set_view': 'set_view',
                 'character_selected': 'character_selected',
                 'change_toolbar_text': 'change_toolbar_text',
                 'set_character_matchup_view': 'set_character_matchup_view'
@@ -129,28 +148,65 @@
             	this.character_select_bool = true;
             },
             
-            set_character_matchup_view: function(event) {
-            	this.toggle_drawer();
-            	this.character = undefined;
-            	this.change_toolbar_text({detail:{primary: 'SSBM Vault', secondary: ''}});
-            	this.character_select_bool = false;
-            	this.character_sheet_bool = false;
-            	this.character_matchup_bool = true;
-            	//if(event.detail.character_one && event.detail.character_two) {
-                if(true) {
-            		//this.character_one = event.detail.character_one;
-            		//this.character_two = event.detail.character_two;
-        		    this.character_one = {};
-                    this.character_two = {};
-                    this.character_one.name = 'Fox';
-                    this.character_two.name = 'Falco';
-            		this.character_one.character_sheet_image = '../../images/character_select_images/fox.jpg';
-            		this.character_two.character_sheet_image = '../../images/character_select_images/falco.jpg';
-                }
-            	else {
-            		this.character_one = 'dummy';
-            		this.character_two = 'dummy';
+            set_view: function(event) {
+            	var to_view = '';
+            	this.$.navigation_drawer.close();
+            	if(typeof(event) == 'string') {
+            		to_view = event;
             	}
+            	else if(event.detail.view) {
+            	    to_view = event.detail.view;
+            	}
+            	else {
+            		to_view = event.target.id;
+            	}
+            	
+            	this.character_select_bool = false;
+                this.character_sheet_bool = false;
+                this.character_matchup_bool = false;
+                this.move_comparison_bool = false;
+                this.move_sheet_bool = false;
+                this.tech_counter = -1;
+                this.character = null;
+                this.change_toolbar_text({detail:{primary: 'SSBM Vault', secondary: ''}});
+                switch (to_view) {
+                	case 'character_select':
+                        this.character_select_bool = true;
+                        this.character = null;
+                		break;
+                	case 'character_sheet':
+                		this.character_sheet_bool = true;
+                		break;
+                	case 'character_matchup':
+                		this.character_matchup_bool = true;
+                		this.change_toolbar_text({detail:{primary: 'SSBM Vault', secondary: ''}});
+                		//if(event.detail.character_one && event.detail.character_two) {
+                        if(true) {
+                            //this.character_one = event.detail.character_one;
+                            //this.character_two = event.detail.character_two;
+                            this.character_one = {};
+                            this.character_two = {};
+                            this.character_one.name = 'Fox';
+                            this.character_two.name = 'Falco';
+                            this.character_one.character_sheet_image = '../../images/character_select_images/fox.jpg';
+                            this.character_two.character_sheet_image = '../../images/character_select_images/falco.jpg';
+                        }
+                        else {
+                            this.character_one = 'dummy';
+                            this.character_two = 'dummy';
+                        }
+                		break;
+                	case 'move_comparison':
+                		this.move_comparison_bool = true;
+                		break;
+                	case 'move_sheet':
+                        this.move_sheet_bool = true;
+                        break;
+                	default:
+                		this.character_select_bool = true;
+                        break;
+                }
+                
             },
 
             toggle_drawer: function() {
@@ -162,23 +218,12 @@
             	this.secondary_toolbar_text = ((event.detail.secondary !== undefined) || (event.detail.secondary !== '')) ? event.detail.secondary : '';
             },
 
-            set_character_select_view: function() {
-            	this.tech_counter = -1;
-            	this.character = null;
-                this.character_sheet_bool = false;
-                this.character_matchup_bool = false;
-                this.character_select_bool = true;
-            	this.toggle_drawer();
-            	this.change_toolbar_text({detail:{primary: 'SSBM Vault', secondary: ''}});
-            },
-
             character_selected: function(event) {
-            	this.character_sheet_bool = true;
-            	this.character_matchup_bool = false;
-            	this.character_select_bool = false;
+            	this.set_view('character_sheet');
                 this.character = event.detail;
-                this.change_toolbar_text({detail:{primary: this.character.name, secondary: ''}});
             }
+            
+            
         });
     </script>
 </dom-module>

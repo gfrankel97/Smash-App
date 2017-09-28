@@ -27,17 +27,10 @@
 		        padding: 0px;
 		        margin: 8px;
 		    }
-		    .inline_block_centerer {
-			  text-align: center;
-			}
-			#centerer {
-			  display: inline-block;
-			  text-align: left;
-			}
-			#centerer {
-			   display: flex;
-               justify-content: center;
-			}
+ 			#centerer {
+ 			   display: flex;
+                justify-content: center;
+ 			}
 	    </style>
 	    <div id="centerer" class="layout horizontal wrap">
             <template is="dom-repeat" items="{{ characters }}" as="character">
@@ -77,9 +70,7 @@
 	        	this.push('characters', {name: 'Fox',
 	        		                     character_select_image: '../../images/character_select_images/fox.jpg',
 	        		                     tech: [
-	        		                    	 {
-	        		                    		 'Waveshine': ['control_down + b','y', 'control_down_right + r']
-	        		                    	 }
+	        		                    	 {'Waveshine': ['control_down + b','y', 'control_down_right + r']}
 	        		                     ]
 	        		                     });
 	        	this.push('characters', {name: 'Falco',

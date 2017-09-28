@@ -90,20 +90,19 @@
             },
 
             format_inputs: function() {
-            	var key = Object.keys(this.inputs)[0]
-            	for(var i=0; i < this.inputs[key].length; i++) {
-            		if(this.inputs[key][i].indexOf(' + ') !== -1) {
-            			this.inputs[key][i] = this.inputs[key][i].split(' + ');
-            		}
-            		if(this.is_array(this.inputs[key][i])) {
-            			this.push('formatted_inputs', {input: this.inputs[key][i]});
-            		}
-            		else {
-            			this.push('formatted_inputs', {input: this.inputs[key][i],
+                var key = Object.keys(this.inputs)[0]
+                for(var i=0; i < this.inputs[key].length; i++) {
+                    if(this.inputs[key][i].indexOf(' + ') !== -1) {
+                        this.inputs[key][i] = this.inputs[key][i].split(' + ');
+                    }
+                    if(this.is_array(this.inputs[key][i])) {
+                        this.push('formatted_inputs', {input: this.inputs[key][i]});
+                    }
+                    else {
+                        this.push('formatted_inputs', {input: this.inputs[key][i],
                             source: '../../images/gcc_buttons/' + this.inputs[key][i] + '.png'});
-            		}
-            		
-            	}
+                    } 
+                }
             },
 
             get_combined_source: function(obj) {
