@@ -50,14 +50,10 @@
         <paper-card>
             <div class="card-content header">
                 <iron-image sizing="cover" class="shared_image_styles move_one_image" src="{{ move_one.move_comparison_image }}"></iron-image>
-                <div id="move_one_header" class="shared_header_styles">
-                    {{ move_one.name }}
-                </div>
-                
+                <div id="move_one_header" class="shared_header_styles">{{ move_one.name }}</div>
+
                 <iron-image sizing="cover" class="shared_image_styles move_two_image" src="{{ move_two.move_comparison_image }}"></iron-image>
-                <div id="move_two_header" class="shared_header_styles">
-                    {{ move_two.name }}
-                </div>
+                <div id="move_two_header" class="shared_header_styles">{{ move_two.name }}</div>
             </div>
             <smash-card-content class="card-content" name="Scrubber">
                 <frame-scrubber slot="collapse_content" class="card-content collapse-content"></frame-scrubber>

@@ -67,6 +67,16 @@
 	        },
 	
 	        get_character_data: function() {
+// 	        	var xhttp = new XMLHttpRequest();
+// 	        	xhttp.open('GET', 'http://heimdallmelee.azurewebsites.net/api/character/', true);
+// 	        	xhttp.onreadystatechange = function() {
+// 	        		if(xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
+// 	        			var returned_chars = xhttp.responseText;
+	        			
+	        			
+// 	        		}
+// 	        	}
+// 	        	xhttp.send();
 	        	this.push('characters', {name: 'Fox',
 	        		                     character_select_image: '../../images/character_select_images/fox.jpg',
 	        		                     tech: [

@@ -9,13 +9,31 @@
 <dom-module id="move-sheet">
     <template>
         <style>
+            paper-card {
+                width: 100%;
+            }
         </style>
+        <paper-card image="{{ move.image }}">
+            <smash-card-content class="card-content" name="Scrubber">
+                <frame-scrubber slot="collapse_content" class="collapse-content card-content"></frame-scrubber>
+            </smash-card-content>
+            <smash-card-content class="card-content" name="Inputs">
+                <input-builder slot="collapse_content" class="collapse-content card-content" inputs="{{ move.tech }}"></input-builder>
+            </smash-card-content>
+        </paper-card>
     </template>
     <script>
         Polymer({
             is: 'move-sheet',
             
             properties: {
+            	move: {
+            	   type: Object,
+            	   value: {}
+            	}
+            },
+
+            ready: function() {
             	
             },
         });

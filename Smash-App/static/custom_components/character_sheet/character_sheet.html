@@ -93,10 +93,18 @@
             		type: Boolean,
             		value: false,
             	},
+            	moves_loaded: {
+                    type: Boolean,
+                    value: false,
+                },
             	tech_opened: {
             		type: Boolean,
             		value: false
             	},
+            	tech_loaded: {
+                    type: Boolean,
+                    value: false
+                },
             	tech_counter: {
             		type: Number,
             		value: -1
@@ -112,15 +120,19 @@
             },
 
             moves_collapse_tapped: function(event) {
-            	this.get_character_moves_data();
             	this.$.moves.toggle();
             	this.moves_opened = this.$.moves.opened;
+            	if(!this.moves_loaded) {
+            		this.get_character_moves_data();
+            	}
             },
 
             tech_collapse_tapped: function() {
-                this.get_character_tech_data();
                 this.$.tech.toggle();
                 this.tech_opened = this.$.tech.opened;
+                if(!this.tech_loaded) {
+                	this.get_character_tech_data();
+                }
             },
 
             get_tech_name: function() {
@@ -129,18 +141,38 @@
             },
 
             get_character_moves_data: function() {
-            	//send request to load moves here
+//              var xhttp = new XMLHttpRequest();
+//              xhttp.open('GET', 'http://heimdallmelee.azurewebsites.net/api/character/' + this.character.name '/moves', true);
+//              xhttp.onreadystatechange = function() {
+//                  if(xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
+//                      var returned_moves = xhttp.responseText;
+                        
+                        
+//                  }
+//              }
+//              xhttp.send();
             	var loaded_moves = [{name: 'Up Smash',
             		                 animation: '../../images/moves/fox/up_smash.gif',
             		                 active: true},
             		                 {name: 'Roll',
             		                 animation: '../../images/moves/fox/roll.gif',
             		                 active: false}];
+            	this.moves_loaded = true;
             	this.set('character.moves', loaded_moves)
             },
 
             get_character_tech_data: function() {
-            	//send request to load tech here
+//              var xhttp = new XMLHttpRequest();
+//              xhttp.open('GET', 'http://heimdallmelee.azurewebsites.net/api/character/' + this.character.name '/tech', true);
+//              xhttp.onreadystatechange = function() {
+//                  if(xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
+//                      var returned_moves = xhttp.responseText;
+                        
+                        
+//                  }
+//              }
+//              xhttp.send();
+            	this.tech_loaded = true;
             },
 
             get_active_moves: function() {

@@ -91,7 +91,7 @@
             <move-comparison></move-comparison>
        </template>
        <template is="dom-if" if="{{ move_sheet_bool }}">
-            <move-sheet></move-sheet>
+            <move-sheet move="{{ move_sheet_move }}"></move-sheet>
        </template>
     </template>
     <script>
@@ -200,6 +200,11 @@
                 		this.move_comparison_bool = true;
                 		break;
                 	case 'move_sheet':
+                		this.move_sheet_move = {
+                			image: '../../images/moves/fox/uptilt.gif',
+                			name: 'Foxs Up Tilt',
+                			tech: {'Up Tilt': ['control_up + a']}
+                	    };
                         this.move_sheet_bool = true;
                         break;
                 	default:

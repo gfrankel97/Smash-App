@@ -13,6 +13,9 @@
 <dom-module id="input-builder">
     <template>
         <style is="custom-style" include="iron-flex iron-flex-alignment">
+            #input_builder_div {
+                margin: 0 auto;
+            }
             img {
                 width:40px;
                 height: 40px;
@@ -30,18 +33,18 @@
             }
         </style>
 
-        <div class="layout horizontal wrap">
+        <div id="input_builder_div" class="layout horizontal wrap">
             <template is="dom-repeat" items="{{ formatted_inputs }}" as="input">
                 <template is="dom-if" if="{{ is_array(input.input) }}">
                     <template is="dom-repeat" items="{{ input.input }}" as="combined_input">
                         <img src="{{ get_combined_source(combined_input) }}">
-                        <template is="dom-if" if="{{ !is_last_array_item(input.input,combined_input) }}">
+                        <template is="dom-if" if="{{ !is_last_array_item(input.input, combined_input) }}">
                             <img class="plus" src=" ../../images/gcc_buttons/plus.png">
                         </template>
                     </template>
                 </template>
                <template is="dom-if" if="{{ !is_array(input.input) }}">
-                    <img src=" {{ input.source }}">
+                    <img src="{{ input.source }}">
                 </template>
                 <div class="comma" hidden="{{ is_last_comma_item(formatted_inputs, input.input) }}">,</div>
             </template>
@@ -90,7 +93,10 @@
             },
 
             format_inputs: function() {
-                var key = Object.keys(this.inputs)[0]
+            	
+                var key = Object.keys(this.inputs)[0];
+//                 console.log('FORMAT INPUTS: ', key)
+//                 if(key) {
                 for(var i=0; i < this.inputs[key].length; i++) {
                     if(this.inputs[key][i].indexOf(' + ') !== -1) {
                         this.inputs[key][i] = this.inputs[key][i].split(' + ');
