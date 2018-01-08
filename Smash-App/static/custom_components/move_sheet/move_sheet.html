@@ -6,16 +6,23 @@
 <link rel="import" href="../frame_scrubber/frame_scrubber.html">
 <link rel="import" href="../input_builder/input_builder.html">
 
+<script type="text/javascript" src="../../js/libgif-js/libgif.js"></script>
+
 <dom-module id="move-sheet">
     <template>
         <style>
             paper-card {
                 width: 100%;
             }
+
+            .jsgif canvas{
+                width: 100%;
+            }
         </style>
-        <paper-card image="{{ move.image }}">
-            <smash-card-content class="card-content" name="Scrubber">
-                <frame-scrubber slot="collapse_content" class="collapse-content card-content"></frame-scrubber>
+        <paper-card id="move_card">
+            <img id="move_gif" src=" {{ move.image }}" rel:animated_src="{{ move.image }}"/>
+            <smash-card-content class="card-content" name="Scrubber" current_frame="{{ current_frame }}">
+                <frame-scrubber slot="collapse_content" class="collapse-content card-content" total_frames="[[ total_frames ]]" current_frame="{{ current_frame }}"></frame-scrubber>
             </smash-card-content>
             <smash-card-content class="card-content" name="Inputs">
                 <input-builder slot="collapse_content" class="collapse-content card-content" inputs="{{ move.tech }}"></input-builder>
@@ -30,12 +37,48 @@
             	move: {
             	   type: Object,
             	   value: {}
-            	}
+            	},
+            	total_frames: {
+            	   type: Number,
+            	   value: -1
+            	},
+            	current_frame: {
+                    type: Number,
+                    value: -1
+                }
             },
 
-            ready: function() {
-            	
+            listeners: {
+                'current_frame_changed': 'current_frame_changed',
+                'play_pause_tapped': 'play_pause_toggle',
             },
+            
+            ready: function() {
+                this.current_gif = new SuperGif({gif: this.$.move_gif,
+                                                 progressbar_height: '0px'
+                                       });
+                this.current_gif.load(function() {
+                    this.total_frames = this.current_gif.get_length();
+                    this.current_gif.play();
+                    this.current_gif.get_canvas().addEventListener('click', this.play_pause_toggle.bind(this));
+                }.bind(this));
+            },
+            
+            current_frame_changed: function(event) {
+                if(this.current_gif) {
+                    this.current_gif.pause();
+                    this.current_gif.move_to(event.detail);
+                }
+            },
+            
+            play_pause_toggle: function(event) {
+                if(this.current_gif.get_playing()) {
+                    this.current_gif.pause();
+                }
+                else {
+                    this.current_gif.play();
+                }
+            }
         });
     </script>
 </dom-module>

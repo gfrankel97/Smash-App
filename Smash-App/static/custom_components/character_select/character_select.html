@@ -5,6 +5,8 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../bower_components/paper-styles/color.html">
 
+<script type="text/javascript" src="../../js/character_json_parser.js"></script>
+
 <dom-module id="character-select">
     <template>
 	    <style is="custom-style" include="iron-flex iron-flex-alignment">
@@ -35,9 +37,7 @@
 	    <div id="centerer" class="layout horizontal wrap">
             <template is="dom-repeat" items="{{ characters }}" as="character">
 	            <paper-card image="{{ character.character_select_image }}" class="character_card" elevation="4" on-tap="character_tapped">
-	                <div class="card-content character_text">
-	                    {{ character.name }}
-	                </div>
+	                <div class="card-content character_text">{{ character.name }}</div>
 	            </paper-card>
 	        </template>
 	    </div>
@@ -67,24 +67,21 @@
 	        },
 	
 	        get_character_data: function() {
-// 	        	var xhttp = new XMLHttpRequest();
-// 	        	xhttp.open('GET', 'http://heimdallmelee.azurewebsites.net/api/character/', true);
-// 	        	xhttp.onreadystatechange = function() {
-// 	        		if(xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
-// 	        			var returned_chars = xhttp.responseText;
-	        			
-	        			
-// 	        		}
-// 	        	}
-// 	        	xhttp.send();
-	        	this.push('characters', {name: 'Fox',
-	        		                     character_select_image: '../../images/character_select_images/fox.jpg',
-	        		                     tech: [
-	        		                    	 {'Waveshine': ['control_down + b','y', 'control_down_right + r']}
-	        		                     ]
-	        		                     });
-	        	this.push('characters', {name: 'Falco',
-	        		                     character_select_image: '../../images/character_select_images/falco.jpg'});
+// 	        	'http://heimdallmelee.azurewebsites.net/api/character/'
+                load_character_data().then(function(characters) {
+                    for(var key in characters) {
+                        characters[key].character_select_image = '../../images/character_select_images/' + characters[key].name.toLowerCase() + '.jpg';
+                        this.push('characters', characters[key])
+                    }
+                }.bind(this));
+// 	        	this.push('characters', {name: 'Fox',
+// 	        		                     character_select_image: '../../images/character_select_images/fox.jpg',
+// 	        		                     tech: [
+// 	        		                    	 {'Waveshine': ['control_down + b','y', 'control_down_right + r']}
+// 	        		                     ]
+// 	        		                     });
+// 	        	this.push('characters', {name: 'Falco',
+// 	        		                     character_select_image: '../../images/character_select_images/falco.jpg'});
 	        },
 
 	        character_tapped: function(event) {

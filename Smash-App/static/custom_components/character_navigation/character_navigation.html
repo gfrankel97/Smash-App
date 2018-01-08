@@ -15,6 +15,7 @@
 <link rel="import" href="../move_sheet/move_sheet.html">
 <link rel="import" href="../styles/icons.html">
 
+
 <dom-module id="character-navigation">
     <template>
         <style is="custom-style" include="iron-flex iron-flex-alignment">
@@ -76,7 +77,7 @@
                     <paper-item id='move_sheet' on-tap="set_view">Move Data</paper-item>
                     <paper-item id='move_comparison' on-tap="set_view">Move Comparison</paper-item>
 				</div>
-             </div>    
+             </div>
         </app-drawer>
         <template is="dom-if" if="{{ character_select_bool }}">
             <character-select id="character_select" is_mobile="{{ is_mobile }}"></character-select>
@@ -160,7 +161,6 @@
             	else {
             		to_view = event.target.id;
             	}
-            	
             	this.character_select_bool = false;
                 this.character_sheet_bool = false;
                 this.character_matchup_bool = false;
@@ -227,8 +227,6 @@
             	this.set_view('character_sheet');
                 this.character = event.detail;
             }
-            
-            
         });
     </script>
 </dom-module>
