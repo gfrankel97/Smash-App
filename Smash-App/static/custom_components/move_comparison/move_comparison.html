@@ -28,9 +28,6 @@
                 width: 30%;
                 height: 96px;
             }
-            .card-content {
-                border-bottom: 1px solid #E5E5E5;
-            }
             #move_one_header {
                 padding-left: 8px;
                 float: left;
@@ -42,6 +39,7 @@
             .header {
                 padding: 0px;
                 height: 96px;
+                border-bottom: 1px solid #E5E5E5;
             }
             smash-card-content {
                 display: block;
@@ -55,10 +53,10 @@
                 <iron-image sizing="cover" class="shared_image_styles move_two_image" src="{{ move_two.move_comparison_image }}"></iron-image>
                 <div id="move_two_header" class="shared_header_styles">{{ move_two.name }}</div>
             </div>
-            <smash-card-content class="card-content" name="Scrubber">
+            <smash-card-content class="card-content" name="Scrubber" add_bottom_border>
                 <frame-scrubber slot="collapse_content" class="card-content collapse-content"></frame-scrubber>
             </smash-card-content>
-            <smash-card-content class="card-content" name="Inputs">
+            <smash-card-content class="card-content" name="Inputs" add_bottom_border>
                 <input-builder slot="collapse_content" class="collapse-content card-content" inputs="{{ get_tech() }}"></input-builder>
             </smash-card-content>
         </paper-card>
