@@ -26,8 +26,8 @@
             }
         </style>
 
-        <paper-icon-button id="play_pause_icon" icon="smash:play" on-tap="play_pause_tapped"></paper-icon-button>
-        <paper-slider id="scrubber" pin snaps max="{{ total_frames }}" value="[[ current_frame ]]" on-immediate-value-changed="scrubber_value_changed"></paper-slider>
+        <paper-icon-button id="play_pause_icon" icon="smash:pause" on-tap="play_pause_tapped"></paper-icon-button>
+        <paper-slider id="scrubber" pin snaps max="{{ total_frames }}" value="[[ current_frame ]]" on-change="drag_end" on-immediate-value-change="scrubber_value_changed"></paper-slider>
     </template>
     <script>
         Polymer({
@@ -56,22 +56,29 @@
                 else {
                     this.$.scrubber.max = this.total_frames;
                     this.$.scrubber.disabled = false;
+                    this.$.play_pause_icon.icon = 'smash:pause';
                     
                 }
+            },
+
+            drag_end: function(event) {
+                this.$.play_pause_icon.icon = 'smash:play';
             },
 
             current_frame_changed: function() {
             },
 
-            scrubber_value_changed: function() {
-                this.$.play_pause_icon.icon = 'smash:play';
+            scrubber_value_changed: function(event) {
                 this.fire('current_frame_changed', this.$.scrubber.immediateValue)
             },
-            
+
             play_pause_tapped: function() {
-                var play_or_pause = this.$.play_pause_icon.icon == 'smash:play' ? 'play' : 'pause';
-                this.$.play_pause_icon.icon = (play_or_pause == 'play' ? 'smash:pause' : 'smash:play');
                 this.fire('play_pause_tapped', {});
+            },
+
+            toggle_play_pause_icon: function() {
+                console.log('GOING TO: ', this.$.play_pause_icon.icon == 'smash:play' ? 'smash:pause' : 'smash:play')
+                this.$.play_pause_icon.icon = this.$.play_pause_icon.icon == 'smash:play' ? 'smash:pause' : 'smash:play';
             }
         });
     </script>

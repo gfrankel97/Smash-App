@@ -20,9 +20,9 @@
             }
         </style>
         <paper-card id="move_card">
-            <img id="move_gif" src=" {{ move.image }}" rel:animated_src="{{ move.image }}"/>
+            <img id="move_gif" src="{{ move.image }}" rel:animated_src="{{ move.image }}"/>
             <smash-card-content class="card-content" name="Scrubber" current_frame="{{ current_frame }}">
-                <frame-scrubber slot="collapse_content" class="collapse-content card-content" total_frames="[[ total_frames ]]" current_frame="{{ current_frame }}"></frame-scrubber>
+                <frame-scrubber id="frame_scrubber" slot="collapse_content" class="collapse-content card-content" total_frames="[[ total_frames ]]" current_frame="{{ current_frame }}"></frame-scrubber>
             </smash-card-content>
             <smash-card-content class="card-content" name="Inputs">
                 <input-builder slot="collapse_content" class="collapse-content card-content" inputs="{{ move.tech }}"></input-builder>
@@ -72,6 +72,7 @@
             },
             
             play_pause_toggle: function(event) {
+                this.$.frame_scrubber.toggle_play_pause_icon();
                 if(this.current_gif.get_playing()) {
                     this.current_gif.pause();
                 }
