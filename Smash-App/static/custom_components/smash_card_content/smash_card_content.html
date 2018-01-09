@@ -8,7 +8,6 @@
         <style is="custom-style" include="iron-flex iron-flex-alignment">
             :host {
                 display: block;
-                border-bottom: 1px solid #E5E5E5
             }
             tiered-chip {
                 margin-top: 6px;
@@ -36,21 +35,21 @@
             
 
         </style>
-                <div class="card_header" on-tap="collapse_tapped">
-                    <tiered-chip id="tier_chip_one" class="left_chip" height="30" width="50" letter="[[ tier_chip_one_letter ]]"></tiered-chip>
-                     <div id="category_title">{{ name }}</div>
-                    <template is="dom-if" if="{{ collapse_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_up"></paper-icon-button></template>
-                    <template is="dom-if" if="{{ !collapse_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_down"></paper-icon-button></template>
-                    <tiered-chip id="tier_chip_two" class="right_chip" height="30" width="50" letter="[[ tier_chip_two_letter ]]"></tiered-chip>
+            <div class="card_header" on-tap="collapse_tapped">
+                <tiered-chip id="tier_chip_one" class="left_chip" height="30" width="50" letter="[[ tier_chip_one_letter ]]"></tiered-chip>
+                <div id="category_title">{{ name }}</div>
+                <template is="dom-if" if="{{ collapse_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_up"></paper-icon-button></template>
+                <template is="dom-if" if="{{ !collapse_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_down"></paper-icon-button></template>
+                <tiered-chip id="tier_chip_two" class="right_chip" height="30" width="50" letter="[[ tier_chip_two_letter ]]"></tiered-chip>
+            </div>
+            <iron-collapse id="collapse">
+                <div class="collapse-content">
+                <slot name="collapse_content"></slot>
+                    <template is="dom-repeat" items="{{ collapse_categories }}" as="category">
+                        <div>{{ category }}</div>
+                    </template>
                 </div>
-                <iron-collapse id="collapse">
-                    <div class="collapse-content">
-                    <slot name="collapse_content"></slot>
-                        <template is="dom-repeat" items="{{ collapse_categories }}" as="category">
-                            <div>{{ category }}</div>
-                        </template>
-                    </div>
-                </iron-collapse>
+            </iron-collapse>
     </template>
     <script>
         Polymer({
@@ -77,12 +76,22 @@
                    type: String,
                    value: ''
                 },
+                add_bottom_border: {
+                    type: Boolean,
+                    value: false
+                }
             },
 
             ready: function() {
             	if(this.tier_chip_one_letter == '' && this.tier_chip_two_letter == '') {
             	   this.$.tier_chip_one.style.display = 'none';
             	   this.$.tier_chip_two.style.display = 'none';
+            	}
+            	if(this.add_bottom_border) {
+            	    this.style.borderBottom = '1px solid #E5E5E5';
+            	}
+            	else {
+            	    this.style.borderBottom = '';
             	}
             },
 
