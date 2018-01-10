@@ -34,21 +34,20 @@
         </style>
 
         <div id="input_builder_div" class="layout horizontal wrap">
-            <template is="dom-repeat" items="{{ formatted_inputs }}" as="input">
-                <template is="dom-if" if="{{ is_array(input.input) }}">
-                    <template is="dom-repeat" items="{{ input.input }}" as="combined_input">
-                        <img src="{{ get_combined_source(combined_input) }}">
-                        <template is="dom-if" if="{{ !is_last_array_item(input.input, combined_input) }}">
+            <template is="dom-repeat" items="{{ inputs }}" as="input">
+                <template is="dom-if" if="{{ is_simulataneous_input(input) }}">
+                    <template is="dom-repeat" items="{{ get_separate_buttons(input) }}" as="button">
+                        <img src="{{ get_button_source(button) }}">
+                        <template is="dom-if" if="{{ !is_last_button_item(input, button) }}">
                             <img class="plus" src=" ../../images/gcc_buttons/plus.png">
                         </template>
                     </template>
                 </template>
-               <template is="dom-if" if="{{ !is_array(input.input) }}">
-                    <img src="{{ input.source }}">
+                <template is="dom-if" if="{{ !is_simulataneous_input(input) }}">
+                    <img src="{{ get_button_source(input) }}">
                 </template>
-                <div class="comma" hidden="{{ is_last_comma_item(formatted_inputs, input.input) }}">,</div>
+                <div class="comma" hidden="{{ is_last_comma_item(inputs, input) }}">,</div>
             </template>
-            
         </div>
     </template>
     <script>
@@ -66,15 +65,12 @@
                 }
             },
 
-            ready: function() {
-            	this.format_inputs();
-            },
-
             is_array: function(obj) {
             	return Array.isArray(obj);
             },
 
-            is_last_array_item: function(arr, element) {
+            is_last_button_item: function(arr, element) {
+                var arr = this.get_separate_buttons(arr);
             	if(arr[arr.length - 1] == element) {
             		return true;
             	}
@@ -84,7 +80,7 @@
             },
 
             is_last_comma_item: function(arr, element) {
-                if(arr[arr.length - 1].input == element) {
+                if(arr[arr.length - 1] == element) {
                 	return true;
                 }
                 else {
@@ -92,25 +88,24 @@
                 }
             },
 
-            format_inputs: function() {
-            	
-                var key = Object.keys(this.inputs)[0];
-//                 console.log('FORMAT INPUTS: ', key)
-//                 if(key) {
-                for(var i=0; i < this.inputs[key].length; i++) {
-                    if(this.inputs[key][i].indexOf(' + ') !== -1) {
-                        this.inputs[key][i] = this.inputs[key][i].split(' + ');
-                    }
-                    if(this.is_array(this.inputs[key][i])) {
-                        this.push('formatted_inputs', {input: this.inputs[key][i]});
-                    }
-                    else {
-                        this.push('formatted_inputs', {input: this.inputs[key][i],
-                            source: '../../images/gcc_buttons/' + this.inputs[key][i] + '.png'});
-                    } 
-                }
+            is_simulataneous_input: function(string) {
+                return (string.indexOf('+') !== -1);
             },
 
+            get_button_source: function(button_string) {
+                return '../../images/gcc_buttons/' + button_string + '.png'
+            },
+            
+            get_separate_buttons: function(input) {
+                var buttons = input.split(' + ');
+                return buttons;
+            },
+
+            get_combined_inputs_array: function(input) {
+                var separate_inputs = input.split(' + ');
+                return separate_inputs;
+            },
+            
             get_combined_source: function(obj) {
             	return '../../images/gcc_buttons/' + obj + '.png';
             }

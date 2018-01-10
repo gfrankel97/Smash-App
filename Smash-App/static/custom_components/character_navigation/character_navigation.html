@@ -200,11 +200,7 @@
                 		this.move_comparison_bool = true;
                 		break;
                 	case 'move_sheet':
-                		this.move_sheet_move = {
-                			image: '../../images/moves/fox/uptilt.gif',
-                			name: 'Foxs Up Tilt',
-                			tech: {'Up Tilt': ['control_up + a']}
-                	    };
+                		this.move_sheet_move = event.detail.move;
                         this.move_sheet_bool = true;
                         break;
                 	default:

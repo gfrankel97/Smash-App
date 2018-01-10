@@ -10,6 +10,18 @@ function load_JSON(callback) {
     xobj.send(null);  
  }
 
+function load_JSON2(callback) {
+    var xobj = new XMLHttpRequest();
+        xobj.overrideMimeType("application/json");
+    xobj.open('GET', '../images/moves/character_general_data.json', true);
+    xobj.onreadystatechange = function () {
+          if (xobj.readyState == 4 && xobj.status == "200") {
+              callback(xobj.responseText);
+          }
+    };
+    xobj.send(null);  
+ }
+
 function load_character_data() {
     return new Promise(function(resolve, reject) {
         load_JSON(function(response) {
@@ -59,7 +71,99 @@ function load_character_data() {
                      }
                  }
             }
-            resolve(data_obj);
+            load_JSON2(function(response) {
+                var new_data_obj = JSON.parse(response);
+                var unfinished_product = [];
+                for(var i=0; i < Object.keys(new_data_obj).length; i++) {
+                    delete new_data_obj[Object.keys(new_data_obj)[i]].index;
+                    delete new_data_obj[Object.keys(new_data_obj)[i]]['Learning Curve'];
+                    
+                    
+                    for(var y=0; y < Object.keys(data_obj).length; y++) {
+                        if(data_obj[Object.keys(data_obj)[y]].name == Object.keys(new_data_obj)[i]) { //DATA MISMATCH CAUSES MISSING CHARATERS
+                            new_data_obj[Object.keys(new_data_obj)[i]].name = Object.keys(new_data_obj)[i];
+                            var combined = get_final_product(data_obj[Object.keys(data_obj)[y]], new_data_obj[Object.keys(new_data_obj)[i]])
+                            unfinished_product.push(combined);
+                        }
+                    }
+                }
+                resolve(unfinished_product);
+            })
         });
     });
+}
+
+function get_final_product(data_obj_1, data_obj_2) {
+        data_obj_2.moves = [];
+        for(var key in data_obj_1) {
+            if(typeof data_obj_1[key] == 'object') {
+                data_obj_2.moves.push({});
+                data_obj_2.moves[data_obj_2.moves.length - 1].hitboxes = data_obj_1[key];
+                data_obj_2.moves[data_obj_2.moves.length - 1].active = true;
+                data_obj_2.moves[data_obj_2.moves.length - 1].name = get_display_name(key);
+                data_obj_2.moves[data_obj_2.moves.length - 1].input = get_input(key);
+            }
+        }
+        delete data_obj_2.moves.name;
+        return data_obj_2;
+}
+
+function get_display_name(input) {
+    var input_to_display_name = {
+        'dthrow': 'Down Throw',
+        'uthrow': 'Up Throw',
+        'bthrow': 'Back Throw',
+        'fthrow' : 'Forward Throw',
+        'pummel': 'Pummel',
+        'edge': 'Edge',
+        'floor': 'Floor',
+        'dair': 'Down Air',
+        'uair': 'Up Air',
+        'bair': 'Back Air',
+        'fair': 'Forward Air',
+        'nair': 'Neutral Air',
+        'dsmash': 'Down Smash',
+        'usmash': 'Up Smash',
+        'fsmash': 'Forward Smash',
+        'dtilt': 'Down Tilt',
+        'utilt': 'Up Tilt',
+        'ftilt': 'Forward Tilt',
+        'dash': 'Dash Attack',
+        'downSpecial': 'Down B',
+        'upSpecial': 'Up B',
+        'sideSpecial': 'Forward B',
+        'neutralSpecial': 'Neutral B',
+        'taunt': 'Taunt'
+    }
+    return input in input_to_display_name ? input_to_display_name[input] : 'NO DISPLAY NAME';
+}
+
+function get_input(name) {
+    var name_to_controller_input = {
+        'dthrow': ['z + control_down'],
+        'uthrow': ['z + control_up'],
+        'bthrow': ['z', 'control_left', 'z', 'control_right'],
+        'fthrow' : ['z', 'control_left', 'z', 'control_right'],
+        'pummel': ['z', 'a'],
+//        'edge': 'Edge',
+//        'floor': 'Floor',
+        'dair': ['cstick_down'],
+        'uair': ['cstick_up'],
+        'bair': ['cstick_left', 'cstick_right'],
+        'fair': ['cstick_left', 'cstick_right'],
+        'nair': ['a'],
+        'dsmash': ['control_down + a', 'cstick_down'],
+        'usmash': ['control_up + a', 'cstick_up'],
+        'fsmash': ['control_right + a', 'cstick_right', 'control_left + a', 'cstick_left'],
+        'dtilt': ['control_down + a'],
+        'utilt': ['control_up + a'],
+        'ftilt': ['control_right + a', 'control_left + a'],
+        'dash': ['a'],
+        'downSpecial': ['control_down + b'],
+        'upSpecial': ['control_up + b'],
+        'sideSpecial': ['control_right + b', 'control_left + b'],
+        'neutralSpecial': ['b'],
+//        'taunt': 'Taunt'
+    }
+    return name in name_to_controller_input ? name_to_controller_input[name] : 'NO INPUTS';
 }

@@ -151,14 +151,6 @@
 //                  }
 //              }
 //              xhttp.send();
-            	var loaded_moves = [{name: 'Up Smash',
-            		                 animation: '../../images/moves/fox/up_smash.gif',
-            		                 active: true},
-            		                 {name: 'Roll',
-            		                 animation: '../../images/moves/fox/roll.gif',
-            		                 active: false}];
-            	this.moves_loaded = true;
-            	this.set('character.moves', loaded_moves)
             },
 
             get_character_tech_data: function() {
@@ -197,6 +189,7 @@
 
             move_tapped: function(event) {
             	var move = event.model.active_move || event.model.passive_move;
+            	this.fire('set_view', {view: 'move_sheet', character: this.character.name, move: move})
             }
         });
     </script>

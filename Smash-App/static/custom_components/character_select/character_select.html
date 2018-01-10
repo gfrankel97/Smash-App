@@ -71,7 +71,7 @@
                 load_character_data().then(function(characters) {
                     for(var key in characters) {
                         characters[key].character_select_image = '../../images/character_select_images/' + characters[key].name.toLowerCase() + '.jpg';
-                        this.push('characters', characters[key])
+                        this.push('characters', characters[key]);
                     }
                 }.bind(this));
 // 	        	this.push('characters', {name: 'Fox',

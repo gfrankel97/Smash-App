@@ -20,12 +20,12 @@
             }
         </style>
         <paper-card id="move_card">
-            <img id="move_gif" src="{{ move.image }}" rel:animated_src="{{ move.image }}"/>
+            <img id="move_gif" src="{{ move.animation }}" rel:animated_src="{{ move.animation }}"/>
             <smash-card-content class="card-content" name="Scrubber" current_frame="{{ current_frame }}" add_bottom_border>
                 <frame-scrubber id="frame_scrubber" slot="collapse_content" class="collapse-content card-content" total_frames="[[ total_frames ]]" current_frame="{{ current_frame }}"></frame-scrubber>
             </smash-card-content>
             <smash-card-content class="card-content" name="Inputs" add_bottom_border>
-                <input-builder slot="collapse_content" class="collapse-content card-content" inputs="{{ move.tech }}"></input-builder>
+                <input-builder slot="collapse_content" class="collapse-content card-content" inputs="{{ move.input }}"></input-builder>
             </smash-card-content>
         </paper-card>
     </template>
