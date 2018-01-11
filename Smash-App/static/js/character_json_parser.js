@@ -30,7 +30,7 @@ function load_character_data() {
             var character_names = {'Zd': 'Zelda',
                                    'Sh': 'Sheik',
                                    'CF': 'Captain Falcon',
-                                   'DK': 'Donkey Kong',
+                                   'DK': 'D. K.',
                                    'DM': 'Dr. Mario',
                                    'YL': 'Young Link',
                                    'Fc': 'Falco',
@@ -38,9 +38,9 @@ function load_character_data() {
                                    'Bw': 'Bowser',
                                    'Lk': 'Link',
                                    'Lg': 'Luigi',
-                                   'GW': 'Game & Watch',
+                                   'GW': 'Mr. Game and Watch',
                                    'Ry': 'Roy',
-                                   'Sm': 'Samus',
+                                   'Sm': 'Samus Aran',
                                    'Gn': 'Ganondorf',
                                    'Ns': 'Ness',
                                    'Mw': 'Mewtwo',
@@ -51,8 +51,7 @@ function load_character_data() {
                                    'Pi': 'Pichu',
                                    'Pk': 'Pikachu',
                                    'Ma': 'Mario',
-                                   'Na': 'Nana',
-                                   'Po': 'Popo',
+                                   'Po': 'Ice Climbers',
                                    'Ms': 'Marth'
                 };
             var unknowns = [];
@@ -80,8 +79,8 @@ function load_character_data() {
                     
                     
                     for(var y=0; y < Object.keys(data_obj).length; y++) {
-                        if(data_obj[Object.keys(data_obj)[y]].name == Object.keys(new_data_obj)[i]) { //DATA MISMATCH CAUSES MISSING CHARATERS
-                            new_data_obj[Object.keys(new_data_obj)[i]].name = Object.keys(new_data_obj)[i];
+                        if(convert_to_filename(data_obj[Object.keys(data_obj)[y]].name) == convert_to_filename(Object.keys(new_data_obj)[i])) { //DATA MISMATCH CAUSES MISSING CHARATERS
+                            new_data_obj[Object.keys(new_data_obj)[i]].name = convert_to_filename(Object.keys(new_data_obj)[i]);
                             var combined = get_final_product(data_obj[Object.keys(data_obj)[y]], new_data_obj[Object.keys(new_data_obj)[i]])
                             unfinished_product.push(combined);
                         }
@@ -166,4 +165,22 @@ function get_input(name) {
 //        'taunt': 'Taunt'
     }
     return name in name_to_controller_input ? name_to_controller_input[name] : 'NO INPUTS';
+}
+
+function convert_to_filename(name) {
+    if(name) {
+        if(name == ('D. K.' || 'DK')) {
+            name == 'Donkey Kong';
+        }
+        if(name == ('Samus Aran' || 'Sm')) {
+            name == 'Samus';
+        }
+        name = name.replace(' ', '_');
+        name = name.replace(' ', '_');
+        name = name.replace('.', '');
+        name = name.replace('.', '');
+        name = name.toLowerCase();
+        return name;
+    }
+    
 }
