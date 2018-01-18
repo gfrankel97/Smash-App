@@ -69,12 +69,13 @@
 	        get_character_data: function() {
 // 	        	'http://heimdallmelee.azurewebsites.net/api/character/'
                 load_character_data().then(function(characters) {
-                    console.log('CHARACTER SELECT: ', Object.keys(characters).length)
                     for(var key in characters) {
                         characters[key].character_select_image = '../../images/character_select_images/' + this.convert_to_filename(characters[key].name) + '.jpg';
                         this.push('characters', characters[key]);
                     }
+                    console.log(this.characters)
                 }.bind(this));
+	        
 // 	        	this.push('characters', {name: 'Fox',
 // 	        		                     character_select_image: '../../images/character_select_images/fox.jpg',
 // 	        		                     tech: [

@@ -44,7 +44,7 @@
                 </div>
                 <iron-collapse id="moves">
                     <div class="collapse-content">
-                        <div class="category_header">Active</div>
+                        <div class="category_header">Offensive</div>
                         <template is="dom-repeat" items="{{ character.moves }}" as="active_move">
                             <template is="dom-if" if="{{ active_move.active }}">
 	                            <paper-card class="move_card" image="{{ active_move.animation }}" elevation="2" on-tap="move_tapped">
@@ -52,7 +52,7 @@
 	                            </paper-card>
                             </template>
                         </template>
-                        <div class="category_header">Passive</div>
+                        <div class="category_header">Defensive</div>
                         <template is="dom-repeat" items="{{ character.moves }}" as="passive_move">
                             <template is="dom-if" if="{{ !passive_move.active }}">
 	                            <paper-card class="move_card" image="{{ passive_move.animation }}" elevation="2" on-tap="move_tapped">
@@ -189,6 +189,7 @@
 
             move_tapped: function(event) {
             	var move = event.model.active_move || event.model.passive_move;
+            	move.character = this.character.name;
             	this.fire('set_view', {view: 'move_sheet', character: this.character.name, move: move})
             }
         });

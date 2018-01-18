@@ -27,7 +27,7 @@
         </style>
 
         <paper-icon-button id="play_pause_icon" icon="smash:pause" on-tap="play_pause_tapped"></paper-icon-button>
-        <paper-slider id="scrubber" pin snaps max="{{ total_frames }}" value="[[ current_frame ]]" on-change="drag_end" on-immediate-value-change="scrubber_value_changed"></paper-slider>
+        <paper-slider id="scrubber" pin snaps max="{{ total_frames }}" value="[[ current_frame ]]" on-dragging-changed="drag_change" on-change="drag_end" on-immediate-value-change="scrubber_value_changed"></paper-slider>
     </template>
     <script>
         Polymer({
@@ -61,11 +61,16 @@
                 }
             },
 
+            drag_changed: function() {
+                console.log('DRAG changed')
+            },
+
             drag_end: function(event) {
                 this.$.play_pause_icon.icon = 'smash:play';
             },
 
             current_frame_changed: function() {
+                
             },
 
             scrubber_value_changed: function(event) {

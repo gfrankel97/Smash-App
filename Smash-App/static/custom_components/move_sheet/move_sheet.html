@@ -21,7 +21,7 @@
         </style>
         <paper-card id="move_card">
             <img id="move_gif" src="{{ move.animation }}" rel:animated_src="{{ move.animation }}"/>
-            <smash-card-content class="card-content" name="Scrubber" current_frame="{{ current_frame }}" add_bottom_border>
+            <smash-card-content id="frame_scrubber_card_content" class="card-content" name="Scrubber" current_frame="{{ current_frame }}" add_bottom_border>
                 <frame-scrubber id="frame_scrubber" slot="collapse_content" class="collapse-content card-content" total_frames="[[ total_frames ]]" current_frame="{{ current_frame }}"></frame-scrubber>
             </smash-card-content>
             <smash-card-content class="card-content" name="Inputs" add_bottom_border>
@@ -36,7 +36,8 @@
             properties: {
             	move: {
             	   type: Object,
-            	   value: {}
+            	   value: {},
+            	   observer: 'move_changed'
             	},
             	total_frames: {
             	   type: Number,
@@ -54,16 +55,69 @@
             },
             
             ready: function() {
-                this.current_gif = new SuperGif({gif: this.$.move_gif,
-                                                 progressbar_height: '0px'
-                                       });
-                this.current_gif.load(function() {
-                    this.total_frames = this.current_gif.get_length();
-                    this.current_gif.play();
-                    this.current_gif.get_canvas().addEventListener('click', this.play_pause_toggle.bind(this));
-                }.bind(this));
             },
-            
+
+            move_changed: function() {
+                this.get_gif();
+            },
+
+            get_gif: function() {
+                var xobj = new XMLHttpRequest();
+                xobj.overrideMimeType("image/gif");
+                xobj.open('GET', '../../images/moves/' + this.move.character + '/' + this.get_file_name(this.move.name) + '.gif', true);
+                xobj.onreadystatechange = function () {
+                    if (xobj.readyState == 4 && xobj.status == "200") {
+                        this.move.animation = xobj.responseURL;
+                        var new_image = new Image();
+                        new_image.src = xobj.responseURL;
+                        new_image['rel:animated_source'] = xobj.responseURL;
+                        new_image.id = 'move_gif';
+                        new_image.onload = function() {
+                            this.$.move_card.removeChild(this.$.move_card.querySelector('#move_gif') || this.$.move_card.querySelector('.jsgif'));
+                            this.$.move_card.insertBefore(new_image, this.$.frame_scrubber_card_content);
+                            this.current_gif = new SuperGif({gif: this.$.move_card.querySelector('#move_gif'),
+                                                             progressbar_height: '0px'
+                                                   });
+                            this.current_gif.load(function() {
+                                this.total_frames = this.current_gif.get_length();
+                                this.current_gif.play();
+                                this.current_gif.get_canvas().addEventListener('click', this.play_pause_toggle.bind(this));
+                                setInterval(function() {
+                                    this.$.frame_scrubber.current_frame = this.current_gif.get_current_frame();
+                                }.bind(this), 50)
+                            }.bind(this));
+                        }.bind(this);
+                    }
+                }.bind(this);
+                xobj.send(null);
+            },
+
+            get_file_name: function(input) {
+                var filenames = {'Down B': 'd_b',
+                                 'Up B': 'up_b',
+                                 'Forward B': 'f_b',
+                                 'Neutral B': 'n_b',
+                                 'Down Tilt': 'd_tilt',
+                                 'Up Tilt': 'up_tilt',
+                                 'Forward Tilt': 'f_tilt',
+                                 'Down Smash': 'd_smash',
+                                 'Up Smash': 'up_smash',
+                                 'Forward Smash': 'f_smash',
+                                 'Neutral Air': 'n_air',
+                                 'Back Air': 'b_air',
+                                 'Forward Air': 'f_air',
+                                 'Down Air': 'd_air',
+                                 'Dash Attack': 'dash',
+                                 
+                    };
+                if(input in filenames) {
+                    return filenames[input];
+                }
+                else {
+                    console.error(input)
+                }
+            },
+
             current_frame_changed: function(event) {
                 if(this.current_gif) {
                     this.current_gif.pause();
