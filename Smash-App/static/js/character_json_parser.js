@@ -101,6 +101,15 @@ function get_final_product(data_obj_1, data_obj_2) {
                 data_obj_2.moves[data_obj_2.moves.length - 1].active = true;
                 data_obj_2.moves[data_obj_2.moves.length - 1].name = get_display_name(key);
                 data_obj_2.moves[data_obj_2.moves.length - 1].input = get_input(key);
+                if(data_obj_2.moves[data_obj_2.moves.length - 1].name.charAt(data_obj_2.moves[data_obj_2.moves.length - 1].name.length - 1) == 'B') {
+                    if('b_moves' in data_obj_2) {
+                    }
+                    var index_to_display_name = {'Neutral B': 0,
+                                                 'Side B': 1,
+                                                 'Up B': 2,
+                                                 'Down B': 3
+                        }
+                }
             }
         }
         delete data_obj_2.moves.name;

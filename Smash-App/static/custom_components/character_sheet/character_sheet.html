@@ -190,6 +190,7 @@
             move_tapped: function(event) {
             	var move = event.model.active_move || event.model.passive_move;
             	move.character = this.character.name;
+            	move.b_moves = this.character.b_moves;
             	this.fire('set_view', {view: 'move_sheet', character: this.character.name, move: move})
             }
         });
