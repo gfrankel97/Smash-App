@@ -4,6 +4,8 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 
 <link rel="import" href="../character_select/character_select.html">
 <link rel="import" href="../input_builder/input_builder.html">
@@ -35,6 +37,12 @@
             .card-content {
                 border-bottom: 1px solid #E5E5E5;
             }
+            .category_header {
+                padding: 8px;
+            }
+            paper-item {
+                --paper-item-selected-weight: normal;
+            }
         </style>
         <paper-card image="{{ character.character_select_image }}">
             <div class="card-content">
@@ -43,24 +51,17 @@
                     <template is="dom-if" if="{{ !moves_opened }}"><paper-icon-button class="collapse_icon" icon="smash:chevron_down" hidden="{{ !opened }}"></paper-icon-button></template>
                 </div>
                 <iron-collapse id="moves">
-                    <div class="collapse-content">
-                        <div class="category_header">Offensive</div>
-                        <template is="dom-repeat" items="{{ character.moves }}" as="active_move">
-                            <template is="dom-if" if="{{ active_move.active }}">
-	                            <paper-card class="move_card" image="{{ active_move.animation }}" elevation="2" on-tap="move_tapped">
-	                                <div class="move_header">{{ active_move.name }}</div>
-	                            </paper-card>
-                            </template>
-                        </template>
-                        <div class="category_header">Defensive</div>
-                        <template is="dom-repeat" items="{{ character.moves }}" as="passive_move">
-                            <template is="dom-if" if="{{ !passive_move.active }}">
-	                            <paper-card class="move_card" image="{{ passive_move.animation }}" elevation="2" on-tap="move_tapped">
-	                                <div class="move_header">{{ passive_move.name }}</div>
-	                            </paper-card>
-	                        </template>
-                        </template>
-                    </div>
+                    <template is="dom-repeat" items="[[ get_move_categories() ]]" as="category">
+                        <div class="category_header" on-tap="toggle_move_category">[[ category ]]
+                            <iron-collapse>
+                                <paper-listbox class="collapse-content">
+                                    <template is="dom-repeat" items="[[ get_moves_by_category(category) ]]" as="move">
+                                        <paper-item on-tap="move_tapped">[[ move.name ]]</paper-item>
+                                    </template>
+                                </paper-listbox>
+                            </iron-collapse>
+                        </div>
+                    </template>
                 </iron-collapse>
             </div>
             <div class="card-content">
@@ -140,6 +141,29 @@
            		return Object.keys(this.character.tech[this.tech_counter])[0];
             },
 
+            get_move_categories: function() {
+                return ['Smash Attacks','Special Attacks', 'Aerials', 'Tilts', 'Grabs','Defensive'];
+            },
+
+            get_moves_by_category: function(category) {
+                var to_return = [];
+                var name_to_category = {
+                    'Smash': 'Smash Attacks',
+                    'B': 'Special Attacks',
+                    'Air': 'Aerials',
+                    'Tilt': 'Tilts',
+                    'Throw': 'Grabs'
+                }
+                for(var i=0; i < this.character.moves.length; i++) {
+                    var identifier = this.character.moves[i].name.split(' ')[this.character.moves[i].name.split(' ').length - 1];
+                    
+                    if(category == name_to_category[identifier]) {
+                        to_return.push(this.character.moves[i]);
+                    }
+                }
+                return to_return;
+            },
+
             get_character_moves_data: function() {
 //              var xhttp = new XMLHttpRequest();
 //              xhttp.open('GET', 'http://heimdallmelee.azurewebsites.net/api/character/' + this.character.name '/moves', true);
@@ -167,28 +191,20 @@
             	this.tech_loaded = true;
             },
 
-            get_active_moves: function() {
-            	var active_moves = [];
-            	for(var i=0; i < this.character.moves.length; i++) {
-            		if(this.character.moves[i].active) {
-            			active_moves.push(this.character.moves[i]);
-            		}
-            	}
-            	return active_moves;
-            },
-
-            get_passive_moves: function() {
-                var passive_moves = [];
-                for(var i=0; i < this.character.moves.length; i++) {
-                    if(!this.character.moves[i].active) {
-                        passive_moves.push(this.character.moves[i]);
-                    }
+            toggle_move_category: function(event) {
+                var collapse = event.target.querySelector('iron-collapse');
+                collapse.toggle();
+                if(collapse.opened) {
+                    event.target.style.fontWeight = 'bold';
                 }
-                return passive_moves;
+                else {
+                    event.target.style.fontWeight = 'normal';
+                }
+                
             },
 
             move_tapped: function(event) {
-            	var move = event.model.active_move || event.model.passive_move;
+            	var move = event.model.__data.move;
             	move.character = this.character.name;
             	move.b_moves = this.character.b_moves;
             	this.fire('set_view', {view: 'move_sheet', character: this.character.name, move: move})

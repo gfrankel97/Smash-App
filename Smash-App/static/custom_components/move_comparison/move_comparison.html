@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <link rel="import" href="../smash_card_content/smash_card_content.html">
 <link rel="import" href="../frame_scrubber/frame_scrubber.html">
@@ -41,6 +42,17 @@
                 height: 96px;
                 border-bottom: 1px solid #E5E5E5;
             }
+            .subheader {
+                padding-left: 8px;
+                padding-top: 14px;
+                height: 48px;
+                font-size: 20px;
+            }
+            #orientation_container {
+                width: 100%;
+                border-bottom: 1px solid #E5E5E5;
+                display: inline-flex;
+            }
             smash-card-content {
                 display: block;
             }
@@ -52,6 +64,10 @@
 
                 <iron-image sizing="cover" class="shared_image_styles move_two_image" src="{{ move_two.move_comparison_image }}"></iron-image>
                 <div id="move_two_header" class="shared_header_styles">{{ move_two.name }}</div>
+            </div>
+            <div id="orientation_container">
+                <div class="subheader">Orientation</div>
+                <div><paper-toggle-button></paper-toggle-button></div>
             </div>
             <smash-card-content class="card-content" name="Scrubber" add_bottom_border>
                 <frame-scrubber slot="collapse_content" class="card-content collapse-content"></frame-scrubber>
@@ -86,6 +102,8 @@
                 this.move_two = {name: 'Forward Smash',
                                  move_comparison_image: '../../images/moves/falco/fsmash.gif'};
             },
+
+            
             
             get_tech: function() {
                 return {'Up Tilt': ['a + control_up']};
